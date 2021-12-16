@@ -1,9 +1,5 @@
-html,
-body {
-    height: 100%;
-}
-
-body {
+.login-container {
+    min-height: 100vh;
     display: flex;
     align-items: center;
     padding-top: 40px;
@@ -39,5 +35,5 @@ body {
 }
 
 .login {
-    background-image: url('./floor-tile.png');
+    background-image: url('../images/floor-tile.png');
 }
