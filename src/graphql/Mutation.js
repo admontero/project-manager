@@ -7,3 +7,25 @@ export const CREATE_USER = gql`
         }
     }
 `;
+
+export const UPDATE_USER_STATE = gql`
+    mutation Mutation($id: ID!, $estadoUsuario: EstadoUsuario!) {
+        updateUserState(_id: $id, estadoUsuario: $estadoUsuario) {
+            _id
+            correo
+            documento
+            nombre
+            tipo
+            estadoUsuario
+        }
+    }
+`;
+
+export const UPDATE_PROJECT_STATE = gql`
+    mutation Mutation($id: ID!, $estadoProyecto: EstadoProyecto!) {
+        updateProjectState(_id: $id, estadoProyecto: $estadoProyecto) {
+            nombre
+            estadoProyecto
+        }
+    }
+`;

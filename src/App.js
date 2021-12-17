@@ -1,6 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Users from "./components/Users";
+import Students from "./components/Students";
+import Projects from "./components/Projects";
+import Requests from "./components/Requests";
+import ProjectInfo from "./components/ProjectInfo";
+import ProjectsLeader from "./components/ProjectsLeader";
 
 function App() {
   return (
@@ -9,20 +15,14 @@ function App() {
         <Routes>
           <Route exact path="/" element={ <Login /> } />
           <Route exact path="/register" element={ <Register /> } />
-          {/* <PrivateRoute exact path="/projects" component={ Projects } /> */}
+          <Route exact path="/projects" element={ <Projects /> } />
+          <Route exact path="/my-projects" element={ <ProjectsLeader /> } />
+          <Route exact path="/project/:id" element={ <ProjectInfo /> } />
+          <Route exact path="/users" element={ <Users /> } />
+          <Route exact path="/students" element={ <Students /> } />
+          <Route exact path="/requests" element={ <Requests /> } />
         </Routes>
       </Router>
-      {/* <Header />
-      <div className="container-fluid">
-        <div className="row">
-          <Navigation />
-          <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-              <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                  <h1 className="h4 font-title">Dashboard</h1>
-              </div>
-          </main>
-        </div>
-      </div> */}
     </div>
   );
 }
