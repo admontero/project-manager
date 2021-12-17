@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../graphql/Mutation";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
+import { useAlert } from 'react-alert';
+import Cookies from 'universal-cookie';
 import "./Login.css";
 
 const Register = () => {
+
+    const alert = useAlert();
+    const cookies = new Cookies();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (cookies.get('_id')) {
+            console.log('hola')
+            navigate('/projects');
+        }
+    }, []);
 
     const [user, setUser] = useState({
         correo: '',
@@ -13,8 +26,6 @@ const Register = () => {
         contrasenia: '',
         tipo: ''
     });
-
-    const [showAlert, setShowAlert] = useState(false);
 
     const { correo, documento, nombre, contrasenia, tipo } = user;
 
@@ -33,6 +44,11 @@ const Register = () => {
 
     const submitNewUser = e => {
         e.preventDefault();
+
+        if (correo.trim() === '' || documento.trim() === '' || nombre.trim() === '' || contrasenia.trim() === '' || tipo.trim() === '') {
+            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            return ;
+        }
 
         createUser({
             variables: {
@@ -105,8 +121,8 @@ const Register = () => {
                     </div>
                     
                     <div className="form-floating">
-                        <select className="form-select" id="tipo" name="tipo" aria-label="Floating label select example" onChange={ changeUser }>
-                            <option selected>SELECCIONA UN TIPO</option>
+                        <select className="form-select" id="tipo" name="tipo" defaultValue="" aria-label="Floating label select example" onChange={ changeUser }>
+                            <option disabled value="">Selecciona un tipo</option>
                             <option value="ADMINISTRADOR">Administrador</option>
                             <option value="LIDER">Lider</option>
                             <option value="ESTUDIANTE">Estudiante</option>

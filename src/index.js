@@ -5,11 +5,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloProvider } from '@apollo/client';
 import Client from './graphql/Client';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
+const options = {
+  position: positions.BOTTOM_RIGHT,
+  timeout: 5000,
+  offset: '30px',
+  // you can also just use 'scale'
+  transition: transitions.SCALE
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={ Client }>
-      <App />
+      <AlertProvider template={ AlertTemplate } { ...options }>
+        <App />
+      </AlertProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

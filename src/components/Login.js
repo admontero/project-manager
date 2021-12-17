@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { AUTH_USER } from "../graphql/Query";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
+import { useAlert } from 'react-alert';
+import Cookies from 'universal-cookie';
 import "./Login.css";
 
 const Login = () => {
+
+    const alert = useAlert();
+    const cookies = new Cookies();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (cookies.get('_id') && ( cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE')) {
+            navigate('/projects');
+        } else if (cookies.get('_id') && cookies.get('tipo') === 'LIDER') {
+            navigate('/my-projects');
+        }
+    }, []);
 
     const [authUser, setAuthUser] = useState({
         correo: '',
         contrasenia: ''
     });
-
-    const [showAlert, setShowAlert] = useState(false);
 
     const { correo, contrasenia } = authUser;
 
@@ -32,7 +44,47 @@ const Login = () => {
     const submitUser = e => {
         e.preventDefault();
 
-        console.log(data.authUser)
+        if (correo.trim() === '' || contrasenia.trim() === '') {
+            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            return ;
+        }
+
+        if (data.authUser) {
+            const { _id, nombre, documento, estadoUsuario, tipo } = data.authUser;
+            switch (estadoUsuario) {
+                case 'PENDIENTE':
+                    alert.show('Usuario pendiente de autorización', { type: 'info' })
+                    break;
+                case 'NO_AUTORIZADO':
+                    alert.show('El usuario no fue autorizado', { type: 'error' })
+                    break;
+                case 'AUTORIZADO':
+                    cookies.set('_id', _id, { path:"/" });
+                    cookies.set('nombre', nombre, { path:"/" });
+                    cookies.set('documento', documento, { path:"/" });
+                    cookies.set('tipo', tipo, { path:"/" });
+
+                    alert.show('Hola ' + nombre, { type: 'success' });
+
+                    setAuthUser({
+                        correo: '',
+                        contrasenia: ''
+                    });
+
+                    if (cookies.get('_id') && ( cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE')) {
+                        navigate('/projects');
+                    } else if (cookies.get('_id') && cookies.get('tipo') === 'LIDER') {
+                        navigate('/my-projects');
+                    }
+            
+                default:
+                    break;
+            }
+        } else {
+            alert.show('No existe un usuario con esos datos', { type: 'error' })
+            return ;
+        }
+
     };
 
     return (
