@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { GET_PROJECT_BY_ID } from "../graphql/Query";
-import { UPDATE_PROJECT_STATE, UPDATE_PROJECT_PHASE } from "../graphql/Mutation";
+import { UPDATE_PROJECT_STATE, UPDATE_PROJECT_PHASE, UPDATE_ADVANCE_REMARK } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -23,6 +23,12 @@ const ProjectInfo = () => {
     const [projectPhase, setProjectPhase] = useState({
         id: '',
         fase: ''
+    });
+
+    const [advanceRemark, setAdvanceRemark] = useState({
+        id: '',
+        advanceId: '',
+        remark: ''
     });
 
     const { data, loading, refetch } = useQuery(GET_PROJECT_BY_ID, {
@@ -80,6 +86,13 @@ const ProjectInfo = () => {
         }
     });
 
+    const [updateAdvanceRemark] = useMutation(UPDATE_ADVANCE_REMARK, {
+        onCompleted(data) {
+            console.log('actualizado', data);
+            alert.show('La observación ha sido actualizada con éxito', { type: 'success' });
+        }
+    });
+
     const updateStatus = e => {
         e.preventDefault();
 
@@ -123,6 +136,31 @@ const ProjectInfo = () => {
         setProjectStatus({
             id: '',
             estadoProyecto: ''
+        });
+    };
+
+    const updateRemark = e => {
+        e.preventDefault();
+
+        if (advanceRemark.id.trim() === '' || advanceRemark.advanceId.trim() === '' || advanceRemark.remark.trim() === '') {
+            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            return ;
+        }
+
+        updateAdvanceRemark({
+            variables: {
+                id: advanceRemark.id,
+                advanceId: advanceRemark.advanceId,
+                remark: advanceRemark.remark
+            }
+        }).then(() => {
+            refetch();
+        });
+
+        setAdvanceRemark({
+            id: '',
+            advanceId: '',
+            remark: ''
         });
     };
 
@@ -175,9 +213,15 @@ const ProjectInfo = () => {
                                         <li className="nav-item font-subtitle">
                                             <a className="nav-link active" data-bs-toggle="tab" href="#home">Información general</a>
                                         </li>
-                                        <li className="nav-item font-subtitle">
-                                            <a className="nav-link" data-bs-toggle="tab" href="#inscritos">Inscritos</a>
-                                        </li>
+                                        {
+                                            cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'LIDER'
+                                            ?
+                                                <li className="nav-item font-subtitle">
+                                                    <a className="nav-link" data-bs-toggle="tab" href="#inscritos">Inscritos</a>
+                                                </li>
+                                            :
+                                                null
+                                        }
                                         <li className="nav-item font-subtitle">
                                             <a className="nav-link" data-bs-toggle="tab" href="#avances">Avances</a>
                                         </li>
@@ -204,7 +248,6 @@ const ProjectInfo = () => {
                                                         <th scope="col">Nombre</th>
                                                         <th scope="col">Estado</th>
                                                         <th scope="col">Fecha de ingreso</th>
-                                                        <th scope="col">Acciones</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -215,17 +258,7 @@ const ProjectInfo = () => {
                                                                 <td>
                                                                     <span className={ i.estadoInscrito === 'ACEPTADA' ? 'badge bg-success' : i.estadoInscrito === 'RECHAZADA' ? 'badge bg-danger' : '' }>{ i.estadoInscrito === 'NULA' ? '' : i.estadoInscrito }</span>
                                                                 </td>
-                                                                <td>12-11-2021</td>
-                                                                <td>
-                                                                    <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                                                        <button className="btn btn-warning btn-sm text-dark">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                                        </button>
-                                                                        <button className="btn btn-danger btn-sm">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-square-x" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M10 10l4 4m0 -4l-4 4" /></svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                                                <td>{ i.fIngreso}</td>
                                                             </tr>
                                                         ))
                                                     }
@@ -251,12 +284,24 @@ const ProjectInfo = () => {
                                                                 <td>{ a.fecha }</td>
                                                                 <td>
                                                                     <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                                                        <button className="btn btn-warning btn-sm text-dark">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                                        </button>
-                                                                        <button className="btn btn-danger btn-sm">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-square-x" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M10 10l4 4m0 -4l-4 4" /></svg>
-                                                                        </button>
+                                                                        {
+                                                                            cookies.get('tipo') === 'LIDER'
+                                                                            ?
+                                                                                <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal3" onClick={ () => { setAdvanceRemark({ ...advanceRemark, id: data.getProjectById._id, advanceId: a._id, remark: a.observaciones || '' }) } }>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                                                                    Editar observación
+                                                                                </button>
+
+                                                                            :
+                                                                            cookies.get('tipo') === 'ESTUDIANTE'
+                                                                            ?
+                                                                                <button className="btn btn-warning btn-sm text-dark">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                                                                    Editar descripción
+                                                                                </button>
+                                                                            :
+                                                                                null
+                                                                        }
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -312,6 +357,37 @@ const ProjectInfo = () => {
                                                                     <option value="EN_DESARROLLO">En desarrollo</option>
                                                                     <option value="TERMINADO">Terminado</option>
                                                                 </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div className="modal fade" id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <form onSubmit={ updateRemark }>
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">Editar observación</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <div className="row">
+                                                            <div className="form-group">
+                                                                <label htmlFor="observacion" className="col-form-label">Observación</label>
+                                                                <textarea 
+                                                                    className="form-control font-body" 
+                                                                    id="observacion"
+                                                                    name="observacion"
+                                                                    rows="3"
+                                                                    onChange={ e => { setAdvanceRemark({ ...advanceRemark, remark: e.target.value }) } }
+                                                                    value={ advanceRemark.remark }
+                                                                ></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
