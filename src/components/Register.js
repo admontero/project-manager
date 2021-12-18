@@ -67,6 +67,8 @@ const Register = () => {
             contrasenia: '',
             tipo: ''
         });
+
+        navigate('/');
     };
 
     return (

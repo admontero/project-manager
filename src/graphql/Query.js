@@ -165,3 +165,28 @@ export const GET_STUDENTS = gql`{
     }
 }
 `;
+
+export const GET_PROJECTS_AND_INSCRIBED = gql`
+    query Query($id: ID!) {
+        getInscribedByLeader(_id: $id) {
+            _id
+            nombre
+            estadoInscrito
+            fIngreso
+            fEgreso
+            usuarioId
+        }
+        getProjects {
+            _id
+            nombre
+            inscritos {
+                _id
+                nombre
+                estadoInscrito
+                fIngreso
+                fEgreso
+                usuarioId
+            }
+        }
+    }
+`;

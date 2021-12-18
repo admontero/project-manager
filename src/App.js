@@ -7,6 +7,8 @@ import Projects from "./components/Projects";
 import Requests from "./components/Requests";
 import ProjectInfo from "./components/ProjectInfo";
 import ProjectsLeader from "./components/ProjectsLeader";
+import NewProject from "./components/NewProject";
+import EditProject from "./components/EditProject";
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
           <Route exact path="/register" element={ <Register /> } />
           <Route exact path="/projects" element={ <Projects /> } />
           <Route exact path="/my-projects" element={ <ProjectsLeader /> } />
+          <Route exact path="/project/new" element={ <NewProject /> } />
           <Route exact path="/project/:id" element={ <ProjectInfo /> } />
+          <Route exact path="/project/:id/edit" element={ <EditProject /> } />
           <Route exact path="/users" element={ <Users /> } />
           <Route exact path="/students" element={ <Students /> } />
           <Route exact path="/requests" element={ <Requests /> } />

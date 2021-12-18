@@ -1,13 +1,16 @@
 import { Fragment, useEffect } from "react";
 import Cookies from 'universal-cookie';
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from 'react-router-dom';
 import { GET_STUDENTS } from "../graphql/Query";
+import { AUTHORIZE_STUDENT } from '../graphql/Mutation';
+import { useAlert } from 'react-alert';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Students = () => {
 
+    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -18,6 +21,22 @@ const Students = () => {
             navigate('/');
         }
     }, []);
+
+    const [AuthorizeStudent] = useMutation(AUTHORIZE_STUDENT, {
+        refetchQueries: [{ query: GET_STUDENTS }],
+        onCompleted(data) {
+            console.log('autorizado', data);
+            alert.show('El estudiante fue autorizado con éxito', { type: 'success' });
+        }
+    });
+
+    const authorize = id => {
+        AuthorizeStudent({
+            variables: {
+                id: id
+            }
+        });
+    };
     
     return (
         <Fragment>
@@ -58,14 +77,18 @@ const Students = () => {
                                                     <span className={ u.estadoUsuario === 'PENDIENTE' ? 'badge bg-warning text-dark' : u.estadoUsuario === 'AUTORIZADO' ? 'badge bg-success' : 'badge bg-danger' }>{ u.estadoUsuario }</span>
                                                 </td>
                                                 <td>
-                                                    <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                                        <button className="btn btn-warning btn-sm text-dark">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                        </button>
-                                                        <button className="btn btn-danger btn-sm">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-square-x" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M10 10l4 4m0 -4l-4 4" /></svg>
-                                                        </button>
-                                                    </div>
+                                                    {
+                                                        u.estadoUsuario !== 'AUTORIZADO'
+                                                        ?
+                                                            <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                                                <button className="btn btn-success btn-sm" onClick={ e => authorize(u._id, e) }>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
+                                                                    Autorizar
+                                                                </button>
+                                                            </div>
+                                                        :
+                                                            null
+                                                    }
                                                 </td>
                                             </tr>
                                         ))
