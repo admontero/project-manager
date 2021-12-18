@@ -181,11 +181,6 @@ export const GET_PROJECTS_AND_INSCRIBED = gql`
             nombre
             inscritos {
                 _id
-                nombre
-                estadoInscrito
-                fIngreso
-                fEgreso
-                usuarioId
             }
         }
     }

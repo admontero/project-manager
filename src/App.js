@@ -9,6 +9,8 @@ import ProjectInfo from "./components/ProjectInfo";
 import ProjectsLeader from "./components/ProjectsLeader";
 import NewProject from "./components/NewProject";
 import EditProject from "./components/EditProject";
+import Advances from "./components/Advances";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   return (
@@ -22,9 +24,11 @@ function App() {
           <Route exact path="/project/new" element={ <NewProject /> } />
           <Route exact path="/project/:id" element={ <ProjectInfo /> } />
           <Route exact path="/project/:id/edit" element={ <EditProject /> } />
+          <Route exact path="/project/:id/advances" element={ <Advances /> } />
           <Route exact path="/users" element={ <Users /> } />
           <Route exact path="/students" element={ <Students /> } />
           <Route exact path="/requests" element={ <Requests /> } />
+          <Route exact path="/profile" element={ <EditProfile /> } />
         </Routes>
       </Router>
     </div>

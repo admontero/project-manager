@@ -8,6 +8,16 @@ export const CREATE_USER = gql`
     }
 `;
 
+export const UPDATE_USER = gql`
+    mutation Mutation($id: ID!, $documento: String, $nombre: String, $contrasenia: String) {
+        updateUser(_id: $id, documento: $documento, nombre: $nombre, contrasenia: $contrasenia) {
+            _id
+            documento
+            nombre
+        }
+    }
+`;
+
 export const UPDATE_USER_STATE = gql`
     mutation Mutation($id: ID!, $estadoUsuario: EstadoUsuario!) {
         updateUserState(_id: $id, estadoUsuario: $estadoUsuario) {
@@ -95,6 +105,63 @@ export const UPDATE_SIGNED_STATE = gql`
                 fIngreso
                 fEgreso
                 usuarioId
+            }
+        }
+    }
+`;
+
+export const UPDATE_ADVANCE_REMARK = gql`
+    mutation Mutation($id: ID!, $advanceId: ID!, $remark: String!) {
+        updateAdvanceRemark(_id: $id, advanceId: $advanceId, remark: $remark) {
+            avances {
+                _id
+                fecha
+                descripcion
+                observaciones
+            }
+        }
+    }
+`;
+
+export const CREATE_INSCRIPTION = gql`
+    mutation Mutation($projectId: ID!, $nombre: String!, $usuarioId: ID!) {
+        createInscription(projectId: $projectId, nombre: $nombre, usuarioId: $usuarioId) {
+            nombre
+            inscritos {
+                _id
+                nombre
+                estadoInscrito
+                fIngreso
+                fEgreso
+                usuarioId
+            }
+        }
+    }
+`;
+
+export const CREATE_ADVANCE = gql`
+    mutation Mutation($projectId: ID!, $fecha: Date, $descripcion: String) {
+        createAdvance(projectId: $projectId, fecha: $fecha, descripcion: $descripcion) {
+            nombre
+            avances {
+                _id
+                fecha
+                descripcion
+                observaciones
+            }
+        }
+    }
+`;
+
+export const UPDATE_ADVANCE_DESCRIPTION = gql`
+    mutation Mutation($id: ID!, $advanceId: ID!, $descripcion: String!) {
+        updateAdvanceDescription(_id: $id, advanceId: $advanceId, descripcion: $descripcion) {
+            nombre
+            avances {
+                _id
+                fecha
+                descripcion
+                observaciones
             }
         }
     }
