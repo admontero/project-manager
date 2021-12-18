@@ -44,6 +44,17 @@ const ProjectInfo = () => {
         refetch();
     }, []);
 
+    useEffect(() => {
+        if (data) {
+            setProjectStatus({
+                estadoProyecto: data.getProjectById.estadoProyecto
+            });
+            setProjectPhase({
+                fase: data.getProjectById.fase === 'NULA' ? '' : data.getProjectById.fase
+            })
+        }
+    }, [data])
+
     const selectId = (id) => {
         setProjectStatus({
             ...projectStatus,
@@ -351,7 +362,7 @@ const ProjectInfo = () => {
                                                         <div className="row">
                                                             <div className="form-group">
                                                                 <label htmlFor="fase" className="form-label">Fases de proyecto</label>
-                                                                <select id="fase" name="fase" className="form-select" aria-label="Default select example" onChange={ changePhase } defaultValue={ data.getProjectById.fase }>
+                                                                <select id="fase" name="fase" className="form-select" aria-label="Default select example" onChange={ changePhase } defaultValue={ data.getProjectById.fase === 'NULA' ? '' : data.getProjectById.fase }>
                                                                     <option value="" disabled>Seleccione una fase de proyecto</option>
                                                                     <option value="INICIADO">Iniciado</option>
                                                                     <option value="EN_DESARROLLO">En desarrollo</option>
