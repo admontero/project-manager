@@ -2,8 +2,8 @@ import { Fragment, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { GET_PROJECT_BY_ID, GET_PROJECT_ADVANCES } from "../graphql/Query";
-import { UPDATE_PROJECT_STATE } from "../graphql/Mutation";
+import { GET_PROJECT_BY_ID } from "../graphql/Query";
+import { UPDATE_PROJECT_STATE, UPDATE_PROJECT_PHASE } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -20,7 +20,12 @@ const ProjectInfo = () => {
         estadoProyecto: ''
     });
 
-    const { data, loading } = useQuery(GET_PROJECT_BY_ID, {
+    const [projectPhase, setProjectPhase] = useState({
+        id: '',
+        fase: ''
+    });
+
+    const { data, loading, refetch } = useQuery(GET_PROJECT_BY_ID, {
         variables: {
             id: params.id
         },
@@ -30,11 +35,19 @@ const ProjectInfo = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        refetch();
     }, []);
 
     const selectId = (id) => {
         setProjectStatus({
             ...projectStatus,
+            id: id
+        })
+    };
+
+    const selectIdPhase = (id) => {
+        setProjectPhase({
+            ...projectPhase,
             id: id
         })
     };
@@ -46,10 +59,24 @@ const ProjectInfo = () => {
         });
     };
 
+    const changePhase = e => {
+        setProjectPhase({
+            ...projectPhase,
+            [e.target.name]: e.target.value
+        });
+    }
+
     const [updateProjectState] = useMutation(UPDATE_PROJECT_STATE, {
         onCompleted(data) {
             console.log('actualizado', data);
             alert.show('El estado fue actualizado con éxito', { type: 'success' });
+        }
+    });
+
+    const [updateProjectPhase] = useMutation(UPDATE_PROJECT_PHASE, {
+        onCompleted(data) {
+            console.log('actualizado', data);
+            alert.show('La fase fue actualizada con éxito', { type: 'success' });
         }
     });
 
@@ -66,6 +93,31 @@ const ProjectInfo = () => {
                 id: projectStatus.id,
                 estadoProyecto: projectStatus.estadoProyecto
             }
+        }).then(() => {
+            refetch();
+        });
+
+        setProjectPhase({
+            id: '',
+            fase: ''
+        });
+    };
+
+    const updatePhase = e => {
+        e.preventDefault();
+      
+        if (projectPhase.id.trim() === '' || projectPhase.fase.trim() === '') {
+            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            return ;
+        }
+
+        updateProjectPhase({
+            variables: {
+                id: projectPhase.id,
+                fase: projectPhase.fase
+            }
+        }).then(() => {
+            refetch();
         });
 
         setProjectStatus({
@@ -92,16 +144,31 @@ const ProjectInfo = () => {
                             :
                                 <Fragment>
                                     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 border-bottom">
-                                        <h1 className="h5">{ data.getProjectById.nombre }</h1>
+                                        <h1 className="h5 font-title">{ data.getProjectById.nombre }</h1>
                                         <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                            <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={ e => selectId(data.getProjectById._id) }>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                Estado Proyecto
-                                            </button>
-                                            <button className="btn btn-warning btn-sm text-dark">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                Información Proyecto
-                                            </button>
+                                            {
+                                                cookies.get('tipo') === 'ADMINISTRADOR'
+                                                ?
+                                                    <Fragment>
+                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={ e => selectId(data.getProjectById._id) }>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                                            Editar Estado
+                                                        </button>
+                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2" onClick={ e => selectIdPhase(data.getProjectById._id) }>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                                            Editar Fase
+                                                        </button>
+                                                    </Fragment>
+                                                :
+                                                cookies.get('tipo') === 'LIDER'
+                                                ?
+                                                    <Link to="edit" className="btn btn-warning btn-sm text-dark">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                                        Editar Información
+                                                    </Link>
+                                                :
+                                                    null
+                                            }
                                         </div>
                                     </div>
                                     <ul className="nav nav-tabs border-0">
@@ -199,37 +266,66 @@ const ProjectInfo = () => {
                                             </table>
                                         </div>
                                     </div>
+                                    <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <form onSubmit={ updateStatus }>
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">Editar estado</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <div className="row">
+                                                            <div className="form-group">
+                                                                <label htmlFor="estadoProyecto" className="form-label">Estados de proyecto</label>
+                                                                <select id="estadoProyecto" name="estadoProyecto" className="form-select" aria-label="Default select example" onChange={ changeProject } defaultValue={ data.getProjectById.estadoProyecto }>
+                                                                    <option value="" disabled>Seleccione un estado de proyecto</option>
+                                                                    <option value="ACTIVO">Activo</option>
+                                                                    <option value="INACTIVO">Inactivo</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div className="modal fade" id="exampleModal2" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <form onSubmit={ updatePhase }>
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">Editar fase</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <div className="row">
+                                                            <div className="form-group">
+                                                                <label htmlFor="fase" className="form-label">Fases de proyecto</label>
+                                                                <select id="fase" name="fase" className="form-select" aria-label="Default select example" onChange={ changePhase } defaultValue={ data.getProjectById.fase }>
+                                                                    <option value="" disabled>Seleccione una fase de proyecto</option>
+                                                                    <option value="INICIADO">Iniciado</option>
+                                                                    <option value="EN_DESARROLLO">En desarrollo</option>
+                                                                    <option value="TERMINADO">Terminado</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </Fragment>
                         }
                     </main>
-                </div>
-            </div>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <form onSubmit={ updateStatus }>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Editar estado</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="form-group">
-                                        <label htmlFor="estadoProyecto" className="form-label">Estados de proyecto</label>
-                                        <select id="estadoProyecto" name="estadoProyecto" defaultValue="" className="form-select" aria-label="Default select example" onChange={ changeProject }>
-                                            <option disabled value="">Seleccione un estado</option>
-                                            <option value="ACTIVO">Activo</option>
-                                            <option value="INACTIVO">Inactivo</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary">Actualizar</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </Fragment>
