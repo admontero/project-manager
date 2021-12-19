@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GET_USERS } from "../graphql/Query";
 import { UPDATE_USER_STATE } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
@@ -27,13 +27,14 @@ const Users = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
-    const selectUser = (id) => {
+    const selectUser = (id, estadoUsuario) => {
         setUserState({
-            ...userState,
-            id: id
-        })
+            id,
+            estadoUsuario
+        });
     };
 
     const changeUser = e => {
@@ -121,7 +122,7 @@ const Users = () => {
                                                             className="btn btn-warning btn-sm text-dark" 
                                                             data-bs-toggle="modal" 
                                                             data-bs-target="#exampleModal"
-                                                            onClick={ e => selectUser(u._id) }
+                                                            onClick={ e => selectUser(u._id, u.estadoUsuario) }
                                                         >
                                                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit mr-2" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
                                                             Estado
@@ -148,7 +149,7 @@ const Users = () => {
                                 <div className="row">
                                     <div className="form-group">
                                         <label htmlFor="estadoUsuario" className="form-label">Estado de usuario</label>
-                                        <select id="estadoUsuario" name="estadoUsuario" defaultValue="" className="form-select" aria-label="Default select example" onChange={ changeUser }>
+                                        <select id="estadoUsuario" name="estadoUsuario" value={ userState.estadoUsuario } className="form-select" aria-label="Default select example" onChange={ changeUser }>
                                             <option disabled value="">Seleccione un estado</option>
                                             <option value="AUTORIZADO">Autorizado</option>
                                             <option value="NO_AUTORIZADO">No autorizado</option>

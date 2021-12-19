@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ const Projects = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [ApproveProject] = useMutation(APPROVE_PROJECT, {

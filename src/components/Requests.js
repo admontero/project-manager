@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GET_PROJECTS_AND_INSCRIBED } from "../graphql/Query";
 import { UPDATE_SIGNED_STATE } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
@@ -24,6 +24,7 @@ const Requests = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [updateSignedState] = useMutation(UPDATE_SIGNED_STATE, {

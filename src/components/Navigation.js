@@ -1,11 +1,12 @@
 import Cookies from 'universal-cookie';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Fragment } from 'react';
 
 const Navigation = () => {
 
     const cookies = new Cookies();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const closeSession = () => {
         cookies.remove('_id', { path:"/" });
@@ -25,13 +26,13 @@ const Navigation = () => {
                         ?    
                             <Fragment>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/projects">
+                                    <Link className={ `nav-link ${location.pathname === '/projects' ? 'active' : ''}` } to="/projects">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-layout-grid" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>
                                         Proyectos
                                     </Link>
                                 </li>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/users">
+                                    <Link className={ `nav-link ${location.pathname === '/users' ? 'active' : ''}` } to="/users">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-users" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
                                         Usuarios
                                     </Link>
@@ -42,19 +43,19 @@ const Navigation = () => {
                         ?
                             <Fragment>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/my-projects">
+                                    <Link className={ `nav-link ${location.pathname === '/my-projects' ? 'active' : ''}` } to="/my-projects">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-layout-grid" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>
-                                        Mis proyectos
+                                        <span>Mis proyectos</span>
                                     </Link>
                                 </li>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/requests">
+                                    <Link className={ `nav-link ${location.pathname === '/requests' ? 'active' : ''}` } to="/requests">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-checkup-list" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><rect x="9" y="3" width="6" height="4" rx="2" /><path d="M9 14h.01" /><path d="M9 17h.01" /><path d="M12 16l1 1l3 -3" /></svg>
                                         Solicitudes pendientes
                                     </Link>
                                 </li>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/students">
+                                    <Link className={ `nav-link ${location.pathname === '/students' ? 'active' : ''}` } to="/students">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-users" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
                                         Estudiantes
                                     </Link>
@@ -63,7 +64,7 @@ const Navigation = () => {
                         :
                             <Fragment>
                                 <li className="nav-item border-bottom">
-                                    <Link className="nav-link" to="/projects">
+                                    <Link className={ `nav-link ${location.pathname === '/projects' ? 'active' : ''}` } to="/projects">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-layout-grid" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>
                                         Proyectos
                                     </Link>
@@ -71,7 +72,7 @@ const Navigation = () => {
                             </Fragment>
                     }
                     <li className="nav-item border-bottom">
-                        <Link className="nav-link" to="/profile">
+                        <Link className={ `nav-link ${location.pathname === '/profile' ? 'active' : ''}` } to="/profile">
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="7" r="4" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                             Mi perfil
                         </Link>

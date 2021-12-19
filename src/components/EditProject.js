@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GET_PROJECT_BY_ID } from "../graphql/Query";
 import { UPDATE_PROJECT } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
@@ -19,6 +19,7 @@ const EditProject = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const { data, loading } = useQuery(GET_PROJECT_BY_ID, {
@@ -43,6 +44,7 @@ const EditProject = () => {
                 presupuesto: data.getProjectById.presupuesto.toString()
             })
         }
+        // eslint-disable-next-line
     }, [loading]);
 
     const { nombre, oGenerales, oEspecificos, presupuesto } = project;

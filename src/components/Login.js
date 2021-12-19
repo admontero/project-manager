@@ -18,6 +18,7 @@ const Login = () => {
         } else if (cookies.get('_id') && cookies.get('tipo') === 'LIDER') {
             navigate('/my-projects');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [authUser, setAuthUser] = useState({
@@ -76,7 +77,7 @@ const Login = () => {
                     } else if (cookies.get('_id') && cookies.get('tipo') === 'LIDER') {
                         navigate('/my-projects');
                     }
-            
+                    break;
                 default:
                     break;
             }

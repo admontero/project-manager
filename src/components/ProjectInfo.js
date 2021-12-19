@@ -42,6 +42,7 @@ const ProjectInfo = () => {
             navigate('/');
         }
         refetch();
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -53,6 +54,7 @@ const ProjectInfo = () => {
                 fase: data.getProjectById.fase === 'NULA' ? '' : data.getProjectById.fase
             })
         }
+        // eslint-disable-next-line
     }, [data])
 
     const selectId = (id) => {
