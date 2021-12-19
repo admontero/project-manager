@@ -21,8 +21,8 @@ const ProjectsLeader = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
-
         refetch();
+        // eslint-disable-next-line
     }, []);
 
     return (

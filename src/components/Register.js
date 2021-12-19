@@ -14,9 +14,9 @@ const Register = () => {
 
     useEffect(() => {
         if (cookies.get('_id')) {
-            console.log('hola')
             navigate('/projects');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [user, setUser] = useState({

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { useMutation } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CREATE_PROJECT } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
 import Header from '../components/Header';
@@ -17,6 +17,7 @@ const NewProject = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [project, setProject] = useState({

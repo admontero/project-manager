@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { GET_PROJECT_ADVANCES } from "../graphql/Query";
 import { UPDATE_ADVANCE_DESCRIPTION, CREATE_ADVANCE } from "../graphql/Mutation";
 import { useAlert } from 'react-alert';
@@ -40,6 +40,7 @@ const Advances = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
     
     const [newAdvance, setNewAdvance] = useState({

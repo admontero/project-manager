@@ -17,6 +17,7 @@ const EditProfile = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [user, setUser] = useState({

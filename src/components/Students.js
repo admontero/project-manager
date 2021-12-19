@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GET_STUDENTS } from "../graphql/Query";
 import { AUTHORIZE_STUDENT } from '../graphql/Mutation';
 import { useAlert } from 'react-alert';
@@ -20,6 +20,7 @@ const Students = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        // eslint-disable-next-line
     }, []);
 
     const [AuthorizeStudent] = useMutation(AUTHORIZE_STUDENT, {
