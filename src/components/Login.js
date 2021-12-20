@@ -28,7 +28,7 @@ const Login = () => {
 
     const { correo, contrasenia } = authUser;
 
-    const { data, refetch } = useQuery(AUTH_USER, {
+    const { data, loading } = useQuery(AUTH_USER, {
         variables: {
             correo: correo,
             contrasenia: contrasenia
@@ -50,7 +50,7 @@ const Login = () => {
             return ;
         }
 
-        refetch().then(() => {
+        if (!loading) {
             if (data.authUser) {
                 const { _id, nombre, documento, estadoUsuario, tipo } = data.authUser;
                 switch (estadoUsuario) {
@@ -86,7 +86,7 @@ const Login = () => {
                 alert.show('No existe un usuario con esos datos', { type: 'error' })
                 return ;
             }
-        });
+        }
     };
 
     return (
