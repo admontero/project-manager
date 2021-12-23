@@ -261,6 +261,8 @@ const ProjectInfo = () => {
                                                     <li className="list-group-item"><b>Presupuesto: </b> { data.getProjectById.presupuesto }</li>
                                                     <li className="list-group-item"><b>Estado: </b> { data.getProjectById.estadoProyecto }</li>
                                                     <li className="list-group-item"><b>Fase: </b> { data.getProjectById.fase }</li>
+                                                    <li className="list-group-item"><b>Fecha inicial: </b> { data.getProjectById.fInicio }</li>
+                                                    <li className="list-group-item"><b>Fecha de terminación: </b> { data.getProjectById.fTerminacion }</li>
                                                     <li className="list-group-item"><b>N°. Inscritos: </b> { data.getProjectById.inscritos.length }</li>
                                                     <li className="list-group-item"><b>N°. Avances: </b> { data.getProjectById.avances.length }</li>
                                                 </ul>
