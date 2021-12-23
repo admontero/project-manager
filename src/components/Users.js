@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
 import { GET_USERS } from "../graphql/Query";
 import { UPDATE_USER_STATE } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Users = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -45,9 +44,12 @@ const Users = () => {
     };
 
     const [updateUserState] = useMutation(UPDATE_USER_STATE, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('El estado fue actualizado con éxito', { type: 'success' })
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El estado fue actualizado',
+                icon: 'success'
+            });
         }
     });
 
@@ -55,7 +57,11 @@ const Users = () => {
         e.preventDefault();
 
         if (id.trim() === '' || estadoUsuario.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
@@ -125,7 +131,7 @@ const Users = () => {
                                                             onClick={ e => selectUser(u._id, u.estadoUsuario) }
                                                         >
                                                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit mr-2" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
-                                                            Estado
+                                                            Actualizar estado
                                                         </button>
                                                     </div>
                                                 </td>

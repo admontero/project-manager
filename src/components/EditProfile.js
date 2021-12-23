@@ -3,13 +3,12 @@ import Cookies from 'universal-cookie';
 import { useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
 import { UPDATE_USER } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const EditProfile = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -30,9 +29,12 @@ const EditProfile = () => {
     const { documento, nombre, contrasenia, confirm } = user;
 
     const [updateUser] = useMutation(UPDATE_USER, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La información fue actualizada con éxito', { type: 'success' })
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'Información de perfil actualizada',
+                icon: 'success'
+            });
         }
     });
 
@@ -40,12 +42,20 @@ const EditProfile = () => {
         e.preventDefault();
 
         if (nombre.trim() === '' || documento.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
         if (contrasenia !== confirm) {
-            alert.show('Las contraseñas no coinciden', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error'
+            });
             return ;
         }
 

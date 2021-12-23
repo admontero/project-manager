@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../graphql/Mutation";
 import { Link, useNavigate } from 'react-router-dom';
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Cookies from 'universal-cookie';
 import "./Login.css";
 
 const Register = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -30,8 +29,12 @@ const Register = () => {
     const { correo, documento, nombre, contrasenia, tipo } = user;
 
     const [createUser] = useMutation(CREATE_USER, {
-        onCompleted(data) {
-            console.log('creado', data);
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La cuenta de usuario ha sido creada',
+                icon: 'success'
+            });
         }
     });
 
@@ -46,7 +49,11 @@ const Register = () => {
         e.preventDefault();
 
         if (correo.trim() === '' || documento.trim() === '' || nombre.trim() === '' || contrasenia.trim() === '' || tipo.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
