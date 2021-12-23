@@ -31,10 +31,12 @@ const NewProject = () => {
             nombre: cookies.get('nombre'),
             usuarioId: cookies.get('_id')
         },
-        presupuesto: 0
+        presupuesto: 0,
+        fInicio: '',
+        fTerminacion: ''
     });
 
-    const { nombre, oGenerales, oEspecificos, lider, presupuesto } = project;
+    const { nombre, oGenerales, oEspecificos, lider, presupuesto, fInicio, fTerminacion } = project;
 
     const [createProject] = useMutation(CREATE_PROJECT, {
         onCompleted() {
@@ -68,7 +70,9 @@ const NewProject = () => {
                     nombre: lider.nombre,
                     usuarioId: lider.usuarioId
                 },
-                presupuesto: Number(presupuesto)
+                presupuesto: Number(presupuesto),
+                fInicio: fInicio,
+                fTerminacion: fTerminacion
             }
         });
 
@@ -81,7 +85,9 @@ const NewProject = () => {
                 nombre: cookies.get('nombre'),
                 usuarioId: cookies.get('_id')
             },
-            presupuesto: 0
+            presupuesto: 0,
+            fInicio: '',
+            fTerminacion: ''
         });
 
         navigate('/my-projects');
@@ -147,6 +153,30 @@ const NewProject = () => {
                                                 rows="3"
                                                 onChange={ e => { setProject({ ...project, [e.target.name]: e.target.value }) } }
                                             ></textarea>
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <label htmlFor="fInicio" className="col-form-label">Fecha inicial</label>
+                                            <input 
+                                                type="date" 
+                                                id="fInicio" 
+                                                name="fInicio"
+                                                className="form-control font-body" 
+                                                placeholder="Fecha inicial del proyecto" 
+                                                aria-label="Fecha inicio proyecto"
+                                                onChange={ e => { setProject({ ...project, [e.target.name]: e.target.value }) } }
+                                            />
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <label htmlFor="fTerminacion" className="col-form-label">Fecha de terminación</label>
+                                            <input 
+                                                type="date" 
+                                                id="fTerminacion" 
+                                                name="fTerminacion"
+                                                className="form-control font-body" 
+                                                placeholder="Fecha de terminación del proyecto" 
+                                                aria-label="Fecha terminación proyecto"
+                                                onChange={ e => { setProject({ ...project, [e.target.name]: e.target.value }) } }
+                                            />
                                         </div>
                                     </div>
                                 </div>
