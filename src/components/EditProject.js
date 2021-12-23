@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate, useParams } from 'react-router-dom';
 import { GET_PROJECT_BY_ID } from "../graphql/Query";
 import { UPDATE_PROJECT } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const EditProject = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
     const params = useParams();
@@ -50,9 +49,12 @@ const EditProject = () => {
     const { nombre, oGenerales, oEspecificos, presupuesto } = project;
 
     const [updateProject] = useMutation(UPDATE_PROJECT, {
-        onCompleted(data) {
-            console.log('creado', data);
-            alert.show('El proyecto fue actualizado con éxito', { type: 'success' })
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El proyecto fue actualizado',
+                icon: 'success'
+            });
         }
     });
 
@@ -60,7 +62,11 @@ const EditProject = () => {
         e.preventDefault();
 
         if (nombre.trim() === '' || oGenerales.trim() === '' || oEspecificos.trim() === '' || presupuesto.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 

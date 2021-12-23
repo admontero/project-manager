@@ -21,6 +21,9 @@ const ProjectsLeader = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
+            navigate('/projects');
+        }
         refetch();
         // eslint-disable-next-line
     }, []);

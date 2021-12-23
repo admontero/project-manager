@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from 'react-router-dom';
 import { GET_PROJECTS } from "../graphql/Query";
 import { APPROVE_PROJECT, CREATE_INSCRIPTION } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Projects = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -25,16 +24,22 @@ const Projects = () => {
 
     const [ApproveProject] = useMutation(APPROVE_PROJECT, {
         refetchQueries: [{ query: GET_PROJECTS }],
-        onCompleted(data) {
-            console.log('aprobado', data);
-            alert.show('El proyecto fue aprobado con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El proyecto fue aprobado',
+                icon: 'success'
+            });
         }
     });
 
     const [createInscription] = useMutation(CREATE_INSCRIPTION, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La solicitud de inscripción ha sido enviada', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La solicitud de inscripción ha sido enviada',
+                icon: 'success'
+            });
         }
     });
 

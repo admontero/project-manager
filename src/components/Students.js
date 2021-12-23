@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
 import { GET_STUDENTS } from "../graphql/Query";
 import { AUTHORIZE_STUDENT } from '../graphql/Mutation';
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Students = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -20,14 +19,20 @@ const Students = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
+            navigate('/projects');
+        }
         // eslint-disable-next-line
     }, []);
 
     const [AuthorizeStudent] = useMutation(AUTHORIZE_STUDENT, {
         refetchQueries: [{ query: GET_STUDENTS }],
-        onCompleted(data) {
-            console.log('autorizado', data);
-            alert.show('El estudiante fue autorizado con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El estudiante fue autorizado',
+                icon: 'success'
+            });
         }
     });
 

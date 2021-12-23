@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { AUTH_USER } from "../graphql/Query";
 import { Link, useNavigate } from 'react-router-dom';
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Cookies from 'universal-cookie';
 import "./Login.css";
 
 const Login = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -46,7 +45,11 @@ const Login = () => {
         e.preventDefault();
 
         if (correo.trim() === '' || contrasenia.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
@@ -55,10 +58,18 @@ const Login = () => {
                 const { _id, nombre, documento, estadoUsuario, tipo } = data.authUser;
                 switch (estadoUsuario) {
                     case 'PENDIENTE':
-                        alert.show('Usuario pendiente de autorización', { type: 'info' })
+                        Toast.fire({
+                            title: 'Acceso en espera',
+                            text: 'El usuario está pendiente de autorización',
+                            icon: 'info'
+                        });
                         break;
                     case 'NO_AUTORIZADO':
-                        alert.show('El usuario no fue autorizado', { type: 'error' })
+                        Toast.fire({
+                            title: 'Acceso denegado',
+                            text: 'El usuario no fue autorizado',
+                            icon: 'error'
+                        });
                         break;
                     case 'AUTORIZADO':
                         cookies.set('_id', _id, { path:"/" });
@@ -66,7 +77,11 @@ const Login = () => {
                         cookies.set('documento', documento, { path:"/" });
                         cookies.set('tipo', tipo, { path:"/" });
     
-                        alert.show('Hola ' + nombre, { type: 'success' });
+                        Toast.fire({
+                            title: 'Login exitoso',
+                            text: `Hola ${ nombre }`,
+                            icon: 'success'
+                        });
     
                         setAuthUser({
                             correo: '',
@@ -83,7 +98,11 @@ const Login = () => {
                         break;
                 }
             } else {
-                alert.show('No existe un usuario con esos datos', { type: 'error' })
+                Toast.fire({
+                    title: 'Error',
+                    text: 'No encontramos usuario con esas credenciales',
+                    icon: 'error'
+                });
                 return ;
             }
         }
