@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { GET_PROJECT_ADVANCES } from "../graphql/Query";
 import { UPDATE_ADVANCE_DESCRIPTION, CREATE_ADVANCE } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Advances = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
     const params = useParams();
@@ -23,16 +22,22 @@ const Advances = () => {
     });
 
     const [updateAdvanceDescription] = useMutation(UPDATE_ADVANCE_DESCRIPTION, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La descripción ha sido actualizada con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La descripción ha sido actualizada',
+                icon: 'success'
+            });
         }
     });
 
     const [createAdvance] = useMutation(CREATE_ADVANCE, {
-        onCompleted(data) {
-            console.log('creado', data);
-            alert.show('Avance guardado con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'Avance de proyecto guardado',
+                icon: 'success'
+            });
         }
     });
 
@@ -59,7 +64,11 @@ const Advances = () => {
         e.preventDefault();
 
         if (advanceDescription.id.trim() === '' || advanceDescription.advanceId.trim() === '' || advanceDescription.descripcion.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 

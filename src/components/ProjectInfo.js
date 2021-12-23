@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { GET_PROJECT_BY_ID } from "../graphql/Query";
 import { UPDATE_PROJECT_STATE, UPDATE_PROJECT_PHASE, UPDATE_ADVANCE_REMARK } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const ProjectInfo = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
     const params = useParams();
@@ -86,23 +85,32 @@ const ProjectInfo = () => {
     }
 
     const [updateProjectState] = useMutation(UPDATE_PROJECT_STATE, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('El estado fue actualizado con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El estado fue actualizado',
+                icon: 'success'
+            });
         }
     });
 
     const [updateProjectPhase] = useMutation(UPDATE_PROJECT_PHASE, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La fase fue actualizada con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La fase fue actualizada',
+                icon: 'success'
+            });
         }
     });
 
     const [updateAdvanceRemark] = useMutation(UPDATE_ADVANCE_REMARK, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La observación ha sido actualizada con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La observación ha sido actualizada',
+                icon: 'success'
+            });
         }
     });
 
@@ -110,7 +118,11 @@ const ProjectInfo = () => {
         e.preventDefault();
 
         if (projectStatus.id.trim() === '' || projectStatus.estadoProyecto.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 

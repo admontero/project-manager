@@ -3,19 +3,21 @@ import Cookies from 'universal-cookie';
 import { useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
 import { CREATE_PROJECT } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const NewProject = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!cookies.get('_id')) {
             navigate('/');
+        }
+        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
+            navigate('/projects');
         }
         // eslint-disable-next-line
     }, []);
@@ -35,9 +37,12 @@ const NewProject = () => {
     const { nombre, oGenerales, oEspecificos, lider, presupuesto } = project;
 
     const [createProject] = useMutation(CREATE_PROJECT, {
-        onCompleted(data) {
-            console.log('creado', data);
-            alert.show('El proyecto fue creado con éxito', { type: 'success' })
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'El proyecto fue creado',
+                icon: 'success'
+            });
         }
     });
 
@@ -45,7 +50,11 @@ const NewProject = () => {
         e.preventDefault();
 
         if (nombre.trim() === '' || oGenerales.trim() === '' || oEspecificos.trim() === '' || presupuesto.trim() === '' || lider.nombre.trim() === '' || lider.documento.trim() === '' || lider.usuarioId.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 

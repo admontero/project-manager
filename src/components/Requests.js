@@ -4,13 +4,12 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
 import { GET_PROJECTS_AND_INSCRIBED } from "../graphql/Query";
 import { UPDATE_SIGNED_STATE } from "../graphql/Mutation";
-import { useAlert } from 'react-alert';
+import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const Requests = () => {
 
-    const alert = useAlert();
     const cookies = new Cookies();
     const navigate = useNavigate();
 
@@ -24,13 +23,19 @@ const Requests = () => {
         if (!cookies.get('_id')) {
             navigate('/');
         }
+        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
+            navigate('/projects');
+        }
         // eslint-disable-next-line
     }, []);
 
     const [updateSignedState] = useMutation(UPDATE_SIGNED_STATE, {
-        onCompleted(data) {
-            console.log('actualizado', data);
-            alert.show('La solicitud ha sido respondida con éxito', { type: 'success' });
+        onCompleted() {
+            Toast.fire({
+                title: 'Éxito',
+                text: 'La solicitud ha sido respondida',
+                icon: 'success'
+            });
             refetch();
         }
     });
