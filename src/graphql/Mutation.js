@@ -68,8 +68,8 @@ export const AUTHORIZE_STUDENT = gql`
 `;
 
 export const CREATE_PROJECT = gql`
-    mutation Mutation($nombre: String!, $oGenerales: String!, $oEspecificos: String!, $lider: LiderInput!, $presupuesto: Int!) {
-        createProject(nombre: $nombre, oGenerales: $oGenerales, oEspecificos: $oEspecificos, lider: $lider, presupuesto: $presupuesto) {
+    mutation Mutation($nombre: String!, $oGenerales: String!, $oEspecificos: String!, $lider: LiderInput!, $presupuesto: Int!, $fInicio: Date, $fTerminacion: Date) {
+        createProject(nombre: $nombre, oGenerales: $oGenerales, oEspecificos: $oEspecificos, lider: $lider, presupuesto: $presupuesto, fInicio: $fInicio, fTerminacion: $fTerminacion) {
             nombre
             oGenerales
             oEspecificos
