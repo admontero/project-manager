@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
-import Cookies from 'universal-cookie';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { GET_PROJECT_BY_ID } from "../graphql/Query";
 import { UPDATE_PROJECT_STATE, UPDATE_PROJECT_PHASE, UPDATE_ADVANCE_REMARK } from "../graphql/Mutation";
+import Cookies from 'universal-cookie';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -11,7 +11,6 @@ import Navigation from "../components/Navigation";
 const ProjectInfo = () => {
 
     const cookies = new Cookies();
-    const navigate = useNavigate();
     const params = useParams();
 
     const [projectStatus, setProjectStatus] = useState({
@@ -37,9 +36,6 @@ const ProjectInfo = () => {
     });
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
         refetch();
         // eslint-disable-next-line
     }, []);

@@ -1,15 +1,14 @@
 import { Fragment, useEffect } from "react";
-import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 import { useQuery } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
 import { GET_PROJECTS_BY_LEADER } from "../graphql/Query";
+import Cookies from 'universal-cookie';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const ProjectsLeader = () => {
 
     const cookies = new Cookies();
-    const navigate = useNavigate();
 
     const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_LEADER, {
         variables: {
@@ -18,12 +17,6 @@ const ProjectsLeader = () => {
     });
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
-        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
-            navigate('/projects');
-        }
         refetch();
         // eslint-disable-next-line
     }, []);
