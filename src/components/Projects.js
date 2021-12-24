@@ -1,9 +1,9 @@
 import { Fragment, useEffect } from "react";
-import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from "@apollo/client";
-import { Link, useNavigate } from 'react-router-dom';
 import { GET_PROJECTS } from "../graphql/Query";
 import { APPROVE_PROJECT, CREATE_INSCRIPTION } from "../graphql/Mutation";
+import Cookies from 'universal-cookie';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -11,14 +11,11 @@ import Navigation from "../components/Navigation";
 const Projects = () => {
 
     const cookies = new Cookies();
-    const navigate = useNavigate();
 
     const { data, loading, refetch } = useQuery(GET_PROJECTS);
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
+        refetch();
         // eslint-disable-next-line
     }, []);
 

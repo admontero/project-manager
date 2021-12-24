@@ -1,8 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
-import Cookies from 'universal-cookie';
-import { useMutation } from "@apollo/client";
+import { Fragment, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from "@apollo/client";
 import { CREATE_PROJECT } from "../graphql/Mutation";
+import Cookies from 'universal-cookie';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -11,16 +11,6 @@ const NewProject = () => {
 
     const cookies = new Cookies();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
-        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
-            navigate('/projects');
-        }
-        // eslint-disable-next-line
-    }, []);
 
     const [project, setProject] = useState({
         nombre: '',

@@ -1,23 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
-import Cookies from 'universal-cookie';
+import { Fragment, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { useNavigate } from 'react-router-dom';
 import { UPDATE_USER } from "../graphql/Mutation";
 import Toast from '../helpers/sweetAlertConfig';
+import Cookies from 'universal-cookie';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
 
 const EditProfile = () => {
 
     const cookies = new Cookies();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
-        // eslint-disable-next-line
-    }, []);
 
     const [user, setUser] = useState({
         documento: cookies.get('documento'),
