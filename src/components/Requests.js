@@ -1,9 +1,9 @@
 import { Fragment, useEffect } from "react";
-import Cookies from 'universal-cookie';
-import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_PROJECTS_AND_INSCRIBED } from "../graphql/Query";
 import { UPDATE_SIGNED_STATE } from "../graphql/Mutation";
+import Cookies from 'universal-cookie';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
@@ -26,6 +26,7 @@ const Requests = () => {
         if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
             navigate('/projects');
         }
+        refetch();
         // eslint-disable-next-line
     }, []);
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@apollo/client";
 import { AUTH_USER } from "../graphql/Query";
-import { Link, useNavigate } from 'react-router-dom';
 import Toast from '../helpers/sweetAlertConfig';
 import Cookies from 'universal-cookie';
 import "./Login.css";

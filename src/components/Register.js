@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../graphql/Mutation";
-import { Link, useNavigate } from 'react-router-dom';
-import Toast from '../helpers/sweetAlertConfig';
 import Cookies from 'universal-cookie';
+import Toast from '../helpers/sweetAlertConfig';
 import "./Login.css";
 
 const Register = () => {

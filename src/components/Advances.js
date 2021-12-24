@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
-import Cookies from 'universal-cookie';
+import { useParams, useLocation } from 'react-router-dom';
 import { useQuery, useMutation } from "@apollo/client";
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { GET_PROJECT_ADVANCES } from "../graphql/Query";
 import { UPDATE_ADVANCE_DESCRIPTION, CREATE_ADVANCE } from "../graphql/Mutation";
 import Toast from '../helpers/sweetAlertConfig';
@@ -10,8 +9,6 @@ import Navigation from "../components/Navigation";
 
 const Advances = () => {
 
-    const cookies = new Cookies();
-    const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
 
@@ -42,9 +39,7 @@ const Advances = () => {
     });
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
+        refetch();
         // eslint-disable-next-line
     }, []);
     

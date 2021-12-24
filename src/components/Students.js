@@ -1,7 +1,5 @@
 import { Fragment, useEffect } from "react";
-import Cookies from 'universal-cookie';
 import { useQuery, useMutation } from "@apollo/client";
-import { useNavigate } from 'react-router-dom';
 import { GET_STUDENTS } from "../graphql/Query";
 import { AUTHORIZE_STUDENT } from '../graphql/Mutation';
 import Toast from '../helpers/sweetAlertConfig';
@@ -10,18 +8,10 @@ import Navigation from "../components/Navigation";
 
 const Students = () => {
 
-    const cookies = new Cookies();
-    const navigate = useNavigate();
-
-    const { data, loading } = useQuery(GET_STUDENTS);
+    const { data, loading, refetch } = useQuery(GET_STUDENTS);
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
-        if (cookies.get('tipo') === 'ADMINISTRADOR' || cookies.get('tipo') === 'ESTUDIANTE') {
-            navigate('/projects');
-        }
+        refetch();
         // eslint-disable-next-line
     }, []);
 

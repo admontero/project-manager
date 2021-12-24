@@ -1,19 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
-import Cookies from 'universal-cookie';
-import { useQuery, useMutation } from "@apollo/client";
-import { useNavigate } from 'react-router-dom';
-import { GET_USERS } from "../graphql/Query";
-import { UPDATE_USER_STATE } from "../graphql/Mutation";
+import { Fragment, useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_USERS } from '../graphql/Query';
+import { UPDATE_USER_STATE } from '../graphql/Mutation';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
-import Navigation from "../components/Navigation";
+import Navigation from '../components/Navigation';
 
 const Users = () => {
 
-    const cookies = new Cookies();
-    const navigate = useNavigate();
-
-    const { data, loading } = useQuery(GET_USERS);
+    const { data, loading, refetch } = useQuery(GET_USERS);
 
     const [userState, setUserState] = useState({
         id: '',
@@ -23,9 +18,7 @@ const Users = () => {
     const { id, estadoUsuario } = userState;
 
     useEffect(() => {
-        if (!cookies.get('_id')) {
-            navigate('/');
-        }
+        refetch();
         // eslint-disable-next-line
     }, []);
 
