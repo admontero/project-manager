@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
+import Modal from "./Modal";
 
 const ProjectInfo = () => {
 
@@ -50,35 +51,7 @@ const ProjectInfo = () => {
             })
         }
         // eslint-disable-next-line
-    }, [data])
-
-    const selectId = (id) => {
-        setProjectStatus({
-            ...projectStatus,
-            id: id
-        })
-    };
-
-    const selectIdPhase = (id) => {
-        setProjectPhase({
-            ...projectPhase,
-            id: id
-        })
-    };
-
-    const changeProject = e => {
-        setProjectStatus({
-            ...projectStatus,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const changePhase = e => {
-        setProjectPhase({
-            ...projectPhase,
-            [e.target.name]: e.target.value
-        });
-    }
+    }, [data]);
 
     const [updateProjectState] = useMutation(UPDATE_PROJECT_STATE, {
         onCompleted() {
@@ -141,7 +114,11 @@ const ProjectInfo = () => {
         e.preventDefault();
       
         if (projectPhase.id.trim() === '' || projectPhase.fase.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
@@ -164,7 +141,11 @@ const ProjectInfo = () => {
         e.preventDefault();
 
         if (advanceRemark.id.trim() === '' || advanceRemark.advanceId.trim() === '' || advanceRemark.remark.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
@@ -209,11 +190,11 @@ const ProjectInfo = () => {
                                                 cookies.get('tipo') === 'ADMINISTRADOR'
                                                 ?
                                                     <Fragment>
-                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={ e => selectId(data.getProjectById._id) }>
+                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={ () => setProjectStatus({ ...projectStatus, id: data.getProjectById._id }) }>
                                                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
                                                             Editar Estado
                                                         </button>
-                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2" onClick={ e => selectIdPhase(data.getProjectById._id) }>
+                                                        <button className="btn btn-warning btn-sm text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2" onClick={ () => setProjectPhase({ ...projectPhase, id: data.getProjectById._id }) }>
                                                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
                                                             Editar Fase
                                                         </button>
@@ -334,94 +315,46 @@ const ProjectInfo = () => {
                                             </table>
                                         </div>
                                     </div>
-                                    <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div className="modal-dialog">
-                                            <form onSubmit={ updateStatus }>
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">Editar estado</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <div className="row">
-                                                            <div className="form-group">
-                                                                <label htmlFor="estadoProyecto" className="form-label">Estados de proyecto</label>
-                                                                <select id="estadoProyecto" name="estadoProyecto" className="form-select" aria-label="Default select example" onChange={ changeProject } defaultValue={ data.getProjectById.estadoProyecto }>
-                                                                    <option value="" disabled>Seleccione un estado de proyecto</option>
-                                                                    <option value="ACTIVO">Activo</option>
-                                                                    <option value="INACTIVO">Inactivo</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                    <Modal id="exampleModal" title="Editar estado" action={ updateStatus }>
+                                        <div className="row">
+                                            <div className="form-group">
+                                                <label htmlFor="estadoProyecto" className="form-label">Estados de proyecto</label>
+                                                <select id="estadoProyecto" name="estadoProyecto" className="form-select" aria-label="Default select example" onChange={ e => setProjectStatus({ ...projectStatus, estadoProyecto: e.target.value }) } defaultValue={ data.getProjectById.estadoProyecto }>
+                                                    <option value="" disabled>Seleccione un estado de proyecto</option>
+                                                    <option value="ACTIVO">Activo</option>
+                                                    <option value="INACTIVO">Inactivo</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="modal fade" id="exampleModal2" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div className="modal-dialog">
-                                            <form onSubmit={ updatePhase }>
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">Editar fase</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <div className="row">
-                                                            <div className="form-group">
-                                                                <label htmlFor="fase" className="form-label">Fases de proyecto</label>
-                                                                <select id="fase" name="fase" className="form-select" aria-label="Default select example" onChange={ changePhase } defaultValue={ data.getProjectById.fase === 'NULA' ? '' : data.getProjectById.fase }>
-                                                                    <option value="" disabled>Seleccione una fase de proyecto</option>
-                                                                    <option value="INICIADO">Iniciado</option>
-                                                                    <option value="EN_DESARROLLO">En desarrollo</option>
-                                                                    <option value="TERMINADO">Terminado</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                    </Modal>
+                                    <Modal id="exampleModal2" title="Editar fase" action={ updatePhase }>
+                                        <div className="row">
+                                            <div className="form-group">
+                                                <label htmlFor="fase" className="form-label">Fases de proyecto</label>
+                                                <select id="fase" name="fase" className="form-select" aria-label="Default select example" onChange={ e => setProjectPhase({ ...projectPhase, fase: e.target.value }) } defaultValue={ data.getProjectById.fase === 'NULA' ? '' : data.getProjectById.fase }>
+                                                    <option value="" disabled>Seleccione una fase de proyecto</option>
+                                                    <option value="INICIADO">Iniciado</option>
+                                                    <option value="EN_DESARROLLO">En desarrollo</option>
+                                                    <option value="TERMINADO">Terminado</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="modal fade" id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div className="modal-dialog">
-                                            <form onSubmit={ updateRemark }>
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">Editar observación</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <div className="row">
-                                                            <div className="form-group">
-                                                                <label htmlFor="observacion" className="col-form-label">Observación</label>
-                                                                <textarea 
-                                                                    className="form-control font-body" 
-                                                                    id="observacion"
-                                                                    name="observacion"
-                                                                    rows="3"
-                                                                    onChange={ e => { setAdvanceRemark({ ...advanceRemark, remark: e.target.value }) } }
-                                                                    value={ advanceRemark.remark }
-                                                                ></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                    </Modal>
+                                    <Modal id="exampleModal3" title="Editar observación" action={ updateRemark }>
+                                        <div className="row">
+                                            <div className="form-group">
+                                                <label htmlFor="observacion" className="col-form-label">Observación</label>
+                                                <textarea 
+                                                    className="form-control font-body" 
+                                                    id="observacion"
+                                                    name="observacion"
+                                                    rows="3"
+                                                    onChange={ e => setAdvanceRemark({ ...advanceRemark, remark: e.target.value }) }
+                                                    value={ advanceRemark.remark }
+                                                ></textarea>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Modal>
                                 </Fragment>
                         }
                     </main>

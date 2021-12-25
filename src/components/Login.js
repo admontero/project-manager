@@ -34,13 +34,6 @@ const Login = () => {
         },
     });
 
-    const changeUser = e => {
-        setAuthUser({
-            ...authUser,
-            [e.target.name]: e.target.value
-        });
-    };
-
     const submitUser = e => {
         e.preventDefault();
 
@@ -121,7 +114,7 @@ const Login = () => {
                             id="correo" 
                             name="correo" 
                             placeholder="name@example.com" 
-                            onChange={ changeUser } 
+                            onChange={ e => setAuthUser({ ...authUser, correo: e.target.value }) } 
                         />
                         <label htmlFor="correo">Email</label>
                     </div>
@@ -132,12 +125,12 @@ const Login = () => {
                             id="contrasenia"
                             name="contrasenia"
                             placeholder="Password" 
-                            onChange={ changeUser }
+                            onChange={ e => setAuthUser({ ...authUser, contrasenia: e.target.value }) }
                         />
                         <label htmlFor="contrasenia">Contraseña</label>
                     </div>
                 
-                    <div className="mb-3">
+                    <div className="my-3">
                        <Link to="/register" className="text-dark text-decoration-none">Crear nuevo usuario</Link>
                     </div>
                     <button className="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>

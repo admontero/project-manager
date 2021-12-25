@@ -38,13 +38,6 @@ const Register = () => {
         }
     });
 
-    const changeUser = e => {
-        setUser({
-            ...user,
-            [e.target.name]: e.target.value
-        });
-    };
-
     const submitNewUser = e => {
         e.preventDefault();
 
@@ -91,7 +84,7 @@ const Register = () => {
                             id="correo" 
                             name="correo" 
                             placeholder="name@example.com" 
-                            onChange={ changeUser } 
+                            onChange={ e => setUser({ ...user, correo: e.target.value }) } 
                         />
                         <label htmlFor="correo">Email</label>
                     </div>
@@ -102,7 +95,7 @@ const Register = () => {
                             id="documento" 
                             name="documento" 
                             placeholder="name@example.com" 
-                            onChange={ changeUser } 
+                            onChange={ e => setUser({ ...user, documento: e.target.value }) } 
                         />
                         <label htmlFor="documento">Documento</label>
                     </div>
@@ -113,7 +106,7 @@ const Register = () => {
                             id="nombre" 
                             name="nombre" 
                             placeholder="name@example.com" 
-                            onChange={ changeUser } 
+                            onChange={ e => setUser({ ...user, nombre: e.target.value }) } 
                         />
                         <label htmlFor="nombre">Nombre</label>
                     </div>
@@ -124,19 +117,26 @@ const Register = () => {
                             id="contrasenia"
                             name="contrasenia"
                             placeholder="Password" 
-                            onChange={ changeUser }
+                            onChange={ e => setUser({ ...user, contrasenia: e.target.value }) }
                         />
                         <label htmlFor="contrasenia">Contraseña</label>
                     </div>
                     
                     <div className="form-floating">
-                        <select className="form-select" id="tipo" name="tipo" defaultValue="" aria-label="Floating label select example" onChange={ changeUser }>
+                        <select 
+                            className="form-select" 
+                            id="tipo" 
+                            name="tipo" 
+                            defaultValue="" 
+                            aria-label="Floating label select tipo usuario"
+                            onChange={ e => setUser({ ...user, tipo: e.target.value }) }
+                        >
                             <option disabled value="">Selecciona un tipo</option>
                             <option value="ADMINISTRADOR">Administrador</option>
                             <option value="LIDER">Lider</option>
                             <option value="ESTUDIANTE">Estudiante</option>
                         </select>
-                        <label htmlFor="tipo">Tipo</label>
+                        <label htmlFor="tipo">Tipo de usuario</label>
                     </div>
                 
                     <div className="my-3">

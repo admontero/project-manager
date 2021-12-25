@@ -6,6 +6,7 @@ import { UPDATE_ADVANCE_DESCRIPTION, CREATE_ADVANCE } from "../graphql/Mutation"
 import Toast from '../helpers/sweetAlertConfig';
 import Header from '../components/Header';
 import Navigation from "../components/Navigation";
+import Modal from "./Modal";
 
 const Advances = () => {
 
@@ -88,7 +89,11 @@ const Advances = () => {
         e.preventDefault();
 
         if (newAdvance.projectId.trim() === '' || newAdvance.fecha.trim() === '' || newAdvance.descripcion.trim() === '') {
-            alert.show('Todos los campos son obligatorios', { type: 'error' })
+            Toast.fire({
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+                icon: 'error'
+            });
             return ;
         }
 
@@ -167,73 +172,41 @@ const Advances = () => {
                     </main>
                 </div>
             </div>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <form onSubmit={ updateDescription }>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Editar descripción</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="form-group">
-                                        <label htmlFor="descripcion" className="col-form-label">Descripción</label>
-                                        <textarea 
-                                            className="form-control font-body" 
-                                            id="descripcion"
-                                            name="descripcion"
-                                            rows="3"
-                                            onChange={ e => { setAdvanceDescription({ ...advanceDescription, descripcion: e.target.value }) } }
-                                            value={ advanceDescription.descripcion }
-                                        ></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
-                            </div>
-                        </div>
-                    </form>
+            <Modal id="exampleModal" title="Editar descripción" action={ updateDescription }>
+                <div className="row">
+                    <div className="form-group">
+                        <label htmlFor="descripcion" className="col-form-label">Descripción</label>
+                        <textarea 
+                            className="form-control font-body" 
+                            id="descripcion"
+                            name="descripcion"
+                            rows="3"
+                            onChange={ e => { setAdvanceDescription({ ...advanceDescription, descripcion: e.target.value }) } }
+                            value={ advanceDescription.descripcion }
+                        ></textarea>
+                    </div>
                 </div>
-            </div>
-            <div className="modal fade" id="exampleModal2" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <form onSubmit={ submitAdvance }>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Creación de Avance</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="form-group">
-                                        <label htmlFor="fecha" className="col-form-label">Fecha</label>
-                                        <input type="date" className="form-control" id="fecha" name="fecha" onChange={ e => { setNewAdvance({ ...newAdvance, fecha: e.target.value }) } }/>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="form-group">
-                                        <label htmlFor="descripcion" className="col-form-label">Descripción</label>
-                                        <textarea 
-                                            className="form-control font-body" 
-                                            id="descripcion"
-                                            name="descripcion"
-                                            rows="3"
-                                            onChange={ e => { setNewAdvance({ ...newAdvance, descripcion: e.target.value }) } }
-                                        ></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
-                            </div>
-                        </div>
-                    </form>
+            </Modal>
+            <Modal id="exampleModal2" title="Creación de Avance" action={ submitAdvance }>
+                <div className="row">
+                    <div className="form-group">
+                        <label htmlFor="fecha" className="col-form-label">Fecha</label>
+                        <input type="date" className="form-control" id="fecha" name="fecha" onChange={ e => { setNewAdvance({ ...newAdvance, fecha: e.target.value }) } }/>
+                    </div>
                 </div>
-            </div>
+                <div className="row">
+                    <div className="form-group">
+                        <label htmlFor="descripcion" className="col-form-label">Descripción</label>
+                        <textarea 
+                            className="form-control font-body" 
+                            id="descripcion"
+                            name="descripcion"
+                            rows="3"
+                            onChange={ e => { setNewAdvance({ ...newAdvance, descripcion: e.target.value }) } }
+                        ></textarea>
+                    </div>
+                </div>
+            </Modal>
         </Fragment>
     );
 }
